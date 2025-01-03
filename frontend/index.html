@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amudra - Smart Food Redistribution</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Basic resets */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4; /* Light grey background */
+      color: #333; /* Dark grey text color */
+      overflow-x: hidden;
+      position: relative;
+      background-image: url('frontend/background.png'); /* Set your PNG background image */
+      background-size: cover; /* Cover the entire viewport */
+      background-position: center center; /* Center the image */
+      background-attachment: fixed; /* Fix the image in place when scrolling */
+    }
+
+    /* Falling objects effect */
+    .falling {
+      position: absolute;
+      top: -10%;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* Prevent interactions with falling objects */
+    }
+
+    .falling div {
+      position: absolute;
+      animation: fall 5s linear infinite; /* Faster falling speed */
+    }
+
+    @keyframes fall {
+      0% {
+        top: -10%;
+        transform: rotate(0deg);
+      }
+      100% {
+        top: 100%;
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Add different falling elements with varied speeds and positions */
+    .falling div:nth-child(1) {
+      left: 10%;
+      animation-duration: 4s; /* Shorter duration for faster fall */
+      animation-delay: 0s;
+      font-size: 50px;
+      color: #FF6347; /* Tomato */
+    }
+
+    .falling div:nth-child(2) {
+      left: 30%;
+      animation-duration: 3s; /* Even faster fall */
+      animation-delay: 1s;
+      font-size: 60px;
+      color: #FFD700; /* Gold */
+    }
+
+    .falling div:nth-child(3) {
+      left: 50%;
+      animation-duration: 4.5s; /* Slightly slower fall */
+      animation-delay: 2s;
+      font-size: 55px;
+      color: #32CD32; /* Lime Green */
+    }
+
+    .falling div:nth-child(4) {
+      left: 70%;
+      animation-duration: 3.5s; /* Fast fall */
+      animation-delay: 3s;
+      font-size: 65px;
+      color: #FF4500; /* Orange Red */
+    }
+
+    .falling div:nth-child(5) {
+      left: 90%;
+      animation-duration: 4s; /* Medium-speed fall */
+      animation-delay: 4s;
+      font-size: 45px;
+      color: #8A2BE2; /* Blue Violet */
+    }
+
+    /* Basic styling for the page */
+    header {
+      background-color: rgba(62, 142, 65, 0.8); /* Green with opacity for a better contrast with the image */
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+    }
+
+    header nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 1.1rem;
+    }
+
+    header nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main content */
+    main {
+      padding: 40px;
+      background-color: rgba(224, 224, 224, 0.8); /* Grey background with opacity */
+      border-radius: 10px;
+      margin: 20px auto;
+      max-width: 1200px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.5s ease-in-out;
+    }
+
+    main:hover {
+      transform: scale(1.02); /* Slight zoom effect on hover */
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #3e8e41; /* Green heading color */
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* Buttons */
+    button {
+      background-color: #3e8e41; /* Green button */
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+      display: block;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2d6a32; /* Darker green on hover */
+    }
+
+    /* Input fields and textareas */
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ddd; /* Grey border */
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #3e8e41; /* Green focus border */
+    }
+
+    /* Fade-in Animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeIn 1.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Footer */
+    footer {
+      background-color: rgba(62, 142, 65, 0.8); /* Green background with opacity */
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Social links */
+    .social-links a {
+      margin: 0 10px;
+    }
+
+    /* Testimonials Section */
+    .testimonial {
+      background-color: #e0e0e0; /* Light grey background for testimonials */
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .testimonial:hover {
+      transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+
+    .testimonial h4 {
+      margin-top: 10px;
+      font-style: italic;
+      color: #555;
+    }
+
+    /* Back to Top Button */
+    #back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: #3e8e41; /* Green */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #back-to-top:hover {
+      background-color: #2d6a32; /* Darker green on hover */
+    }
+
+  </style>
+</head>
+<body>
+  <div class="falling">
+    <div>🍞</div> <!-- Falling bread -->
+    <div>🍎</div> <!-- Falling apple -->
+    <div>🍗</div> <!-- Falling chicken -->
+    <div>🍊</div> <!-- Falling orange -->
+    <div>🥖</div> <!-- Falling baguette -->
+  </div>
+
+  <header>
+    <div class="header-content">
+      <h1>Amudra</h1>
+      <p>"Ending food waste, feeding those in need"</p>
+      <nav>
+        <a href="#donate">Donate Food</a>
+        <a href="#about">About Us</a>
+        <a href="#dashboard">NGO Dashboard</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Donation Section -->
+    <section id="donate" class="fade-in">
+      <h2>Donate Surplus Food</h2>
+      <p>Every small contribution counts. Donate food to help us fight hunger.</p>
+      <form id="donation-form">
+        <label for="donor-name">Your Name</label>
+        <input type="text" id="donor-name" placeholder="Enter your name" required>
+
+        <label for="food-type">Food Type</label>
+        <input type="text" id="food-type" placeholder="E.g., Rice, Bread" required>
+
+        <label for="quantity">Quantity (kg)</label>
+        <input type="number" id="quantity" placeholder="Enter quantity" required>
+
+        <label for="pickup-address">Pickup Address</label>
+        <textarea id="pickup-address" placeholder="Enter the address" required></textarea>
+
+        <button type="submit">Donate Now</button>
+      </form>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="fade-in">
+      <h2>About Us</h2>
+      <p>
+        At Amudra, we strive to end food waste and feed those in need. Our mission is to connect donors with NGOs and shelters in real-time to ensure surplus food reaches the right hands. Join us in this mission!
+      </p>
+    </section>
+
+    <!-- NGO Dashboard Section -->
+    <section id="dashboard" class="fade-in">
+      <h2>NGO Dashboard</h2>
+      <p>Current food donations:</p>
+      <ul id="donation-list">
+        <!-- Donations will be dynamically populated -->
+      </ul>
+      <p>Total Donations: <span id="donation-counter">0</span></p>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="fade-in">
+      <h2>What Our Donors Say</h2>
+      <div class="testimonial">
+        <p>"Amudra made it so easy to donate surplus food. A wonderful initiative!"</p>
+        <h4>- John Doe</h4>
+      </div>
+      <div class="testimonial">
+        <p>"Thanks to Amudra, we’ve reduced waste and helped people in need."</p>
+        <h4>- Jane Smith</h4>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="fade-in">
+      <h2>Contact Us</h2>
+      <form id="contact-form">
+        <label for="contact-name">Your Name</label>
+        <input type="text" id="contact-name" placeholder="Enter your name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="Enter your message" required></textarea>
+
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+    
+    <!-- Back to Top Button -->
+    <button id="back-to-top" onclick="scrollToTop()">Back to Top</button>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 Amudra. All rights reserved.</p>
+      <div class="social-links">
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll to the top function
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  </script>
+</body>
+</html>
